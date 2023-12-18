@@ -1,0 +1,7 @@
+.env
+venv/
+db.sqlite3
+.idea/
+user_interactions.png
+default_post.jpg
+default_profile.jpg
