@@ -6,6 +6,16 @@ from django.db.models.signals import post_save
 # This model is designed to extend the built-in User model with additional
 # profile information, such as a name, content, and an image.
 class Profile(models.Model):
+    # By default, a OneToOneField creates a database column that stores the
+    # primary key (id) of the associated model (User in this case). So, the
+    # owner field would initially store the id of the associated User. This
+    # is the default behavior when no specific related_name or
+    # related_query_name is provided (see serializers.py)...
+
+    # !!! Foreign key field of the model instance is the object of primary key:
+    # user_object = profile_instance.owner
+    # username = user_object.username
+    # user_instance.username = profile_instance.owner.username
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

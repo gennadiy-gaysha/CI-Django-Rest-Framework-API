@@ -4,6 +4,11 @@ from .models import Profile
 
 # inherits  from ModelSerializer:
 class ProfileSerializer(serializers.ModelSerializer):
+    # In the context of the original explanation about overwriting the default
+    # behavior to display the username for better readability in serialized
+    # data, the adjustment is made in the serializer, not in the model. The
+    # serializer ensures that when you serialize a Profile instance, the owner
+    # field returns the username of the associated User rather than the default id.
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
