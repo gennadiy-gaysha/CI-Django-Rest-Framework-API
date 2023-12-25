@@ -6,17 +6,44 @@ from .models import Profile
 class ProfileSerializer(serializers.ModelSerializer):
     # In the context of the original explanation about overwriting the default
     # behavior to display the username for better readability in serialized
-    # data, the adjustment is made in the serializer, not in the model. The
-    # serializer ensures that when you serialize a Profile instance, the owner
-    # field returns the username of the associated User rather than the default id.
+    # data, the adjustment is made in the serializer, not in the model.
+    # The serializer ensures that when you serialize a Profile instance,
+    # the owner field returns the username of the associated User rather than
+    # the default id.
     owner = serializers.ReadOnlyField(source='owner.username')
+    # 1) is_owner Field:
+    # is_owner is a custom field that we're adding to the ProfileSerializer.
+    # Unlike fields such as CharField or IntegerField, SerializerMethodField
+    # allows you to define a custom method to determine the value of the field.
+    # 2) SerializerMethodField:
+    # SerializerMethodField is a field provided by Django REST framework that
+    # allows us to define a custom method to determine the value of the field.
+    # It doesn't directly map to a model field but gives you flexibility to
+    # include custom logic when serializing data.
+    is_owner = serializers.SerializerMethodField()
 
+    # This method takes two parameters:
+    # self: The instance of the serializer.
+    # obj: The object being serialized (in this case, a Profile instance).
+    # get_is_owner method uses the request object from the context to check if
+    # the user making the request is the owner of the profile being serialized.
+    # This helps in determining whether the user has ownership permissions based
+    # on the custom logic defined in get_is_owner.
+    def get_is_owner(self, obj):
+        # self.context is a dictionary that provides additional context to the
+        # serializer. In this case, it includes the request object.
+        # request = self.context['request'] retrieves the request object from
+        # the context.
+        request = self.context['request']
+        # request.user represents the user making the request.
+        # obj.owner represents the owner of the profile being serialized.
+        return request.user == obj.owner
     class Meta:
         model = Profile
         # fields = '__all__'
         fields = [
             'id', 'owner', 'email', 'created_at', 'updated_at', 'name',
-            'content', 'image'
+            'content', 'image', 'is_owner'
         ]
 
 # This is a Django REST Framework (DRF) serializer class named `ProfileSerializer`.

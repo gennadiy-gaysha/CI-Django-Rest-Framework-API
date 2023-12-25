@@ -3,6 +3,7 @@ venv/
 db.sqlite3
 .idea/
 user_interactions.png
+FullEntityRelationship Diagram.png
 default_post.jpg
 default_profile.jpg
 Django REST Framework (DRF).xmind
