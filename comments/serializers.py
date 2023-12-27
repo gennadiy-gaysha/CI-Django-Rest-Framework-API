@@ -2,15 +2,15 @@ from rest_framework import serializers
 from .models import Comment
 
 
-class CommentSerializer(serializers.Serializer):
+class CommentSerializer(serializers.ModelSerializer):
     """
         Serializer for the Comment model
         Adds three extra fields when returning a list of Comment instances
     """
     owner = serializers.ReadOnlyField(source='owner.username')
+    is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
-    is_owner = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
         '''
@@ -23,15 +23,15 @@ class CommentSerializer(serializers.Serializer):
         If the current user is the owner of the comment, the method returns
         True; otherwise, it returns False.
         '''
-        request = self.context(['request'])
+        request = self.context['request']
         return request.user == obj.owner
 
     class Meta:
         model = Comment
         fields = [
             'id', 'owner', 'is_owner', 'profile_id', 'profile_image',
-            'post', 'created_at', 'updated_at', 'content'
+            'posts', 'created_at', 'updated_at', 'content'
         ]
 
 class CommentDetailSerializer(CommentSerializer):
-    post = serializers.ReadOnlyField(source='post.id')
+    posts = serializers.ReadOnlyField(source='posts.id')
