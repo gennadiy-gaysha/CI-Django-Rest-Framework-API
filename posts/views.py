@@ -41,6 +41,9 @@ class PostsDetail(APIView):
 
     def get(self, request, pk):
         post = self.get_object(pk)
+        # The request object contains information about the current HTTP request,
+        # including details about the user making the request, headers, and other
+        # request-specific information.
         serializer = PostsSerializer(post, context={
             'request': request})
         return Response(serializer.data)
