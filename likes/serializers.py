@@ -21,3 +21,4 @@ class LikeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'detail': 'possible duplicate'
             })
+
