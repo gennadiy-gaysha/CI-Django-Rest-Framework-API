@@ -9,6 +9,8 @@ class PostsSerializer(serializers.ModelSerializer):
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     is_owner = serializers.SerializerMethodField()
     like_id = serializers.SerializerMethodField()
+    likes_count = serializers.ReadOnlyField()
+    comments_count = serializers.ReadOnlyField()
 
     def validate_image(self, value):
         if value.size > 1024 * 1024 * 2:
@@ -24,6 +26,7 @@ class PostsSerializer(serializers.ModelSerializer):
                 'Image height larger than 4096px'
             )
         return value
+
     def get_is_owner(self, obj):
         request = self.context['request']
         return request.user == obj.owner
@@ -41,4 +44,4 @@ class PostsSerializer(serializers.ModelSerializer):
         model = Posts
         fields = ['id', 'owner', 'is_owner', 'profile_id', 'profile_image',
                   'created_at', 'updated_at', 'title', 'content', 'image',
-                  'image_filter', 'like_id']
+                  'image_filter', 'like_id', 'comments_count', 'likes_count']

@@ -1,7 +1,10 @@
 from rest_framework import generics, permissions
+from django.db.models import Count
+from rest_framework import filters
 from drf_api.permissions import IsOwnerOrReadOnly
 from .models import Posts
 from .serializers import PostsSerializer
+
 
 class PostsList(generics.ListCreateAPIView):
     """
@@ -10,10 +13,17 @@ class PostsList(generics.ListCreateAPIView):
     """
     serializer_class = PostsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Posts.objects.all()
+    queryset = Posts.objects.annotate(
+        comments_count=Count('comment', distinct=True),
+        likes_count=Count('likes', distinct=True),
+    ).order_by('-created_at')
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['owner__username', 'title']
+    ordering_fields = ['likes_count', 'comments_count', 'likes__created_at']
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
 
 class PostsDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -21,6 +31,7 @@ class PostsDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = PostsSerializer
-    queryset = Posts.objects.all()
-
-
+    queryset = Posts.objects.annotate(
+        comments_count=Count('comment', distinct=True),
+        likes_count=Count('likes', distinct=True),
+    ).order_by('-created_at')

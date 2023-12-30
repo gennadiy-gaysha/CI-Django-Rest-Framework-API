@@ -23,10 +23,20 @@ class ProfileSerializer(serializers.ModelSerializer):
     # include custom logic when serializing data.
     is_owner = serializers.SerializerMethodField()
     following_id = serializers.SerializerMethodField()
+    posts_count=serializers.ReadOnlyField()
+    followers_count=serializers.ReadOnlyField()
+    following_count=serializers.ReadOnlyField()
 
     # This method takes two parameters:
     # self: The instance of the serializer.
-    # obj: The object being serialized (in this case, a Profile instance).
+
+    # obj: The object being serialized (in this case, a Profile instance). In
+    # Django Rest Framework (DRF), when you define a serializer, the obj
+    # parameter in serializer methods represents the instance of the model
+    # that is being serialized. This is not something you explicitly set; DRF
+    # automatically passes the instance to the serializer when you use it to
+    # serialize an object.
+
     # get_is_owner method uses the request object from the context to check if
     # the user making the request is the owner of the profile being serialized.
     # This helps in determining whether the user has ownership permissions based
@@ -81,7 +91,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         fields = [
             'id', 'owner', 'created_at', 'updated_at', 'email', 'name',
-            'content', 'image', 'is_owner', 'following_id',
+            'content', 'image', 'is_owner', 'following_id', 'posts_count',
+            'followers_count', 'following_count'
         ]
 
 # This is a Django REST Framework (DRF) serializer class named `ProfileSerializer`.
