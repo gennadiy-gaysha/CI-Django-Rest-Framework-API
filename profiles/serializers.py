@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Profile
+from followers.models import Follower
 
 
 # inherits  from ModelSerializer:
@@ -21,6 +22,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     # It doesn't directly map to a model field but gives you flexibility to
     # include custom logic when serializing data.
     is_owner = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()
 
     # This method takes two parameters:
     # self: The instance of the serializer.
@@ -35,15 +37,51 @@ class ProfileSerializer(serializers.ModelSerializer):
         # request = self.context['request'] retrieves the request object from
         # the context.
         request = self.context['request']
-        # request.user represents the user making the request.
+        # request.user represents the user making the request (sets request.user
+        # attribute to the corresponding user object if the user is authenticated)
         # obj.owner represents the owner of the profile being serialized.
         return request.user == obj.owner
+
+    def get_following_id(self, obj):
+        # This line retrieves the user making the request from the context. The
+        # self.context['request'] represents the request object, and user will
+        # contain the user associated with the request.
+        user = self.context['request'].user
+        print(user)
+        if user.is_authenticated:
+            # This line queries the Follower model to check if the requesting
+            # user (owner=user) is following the owner of the profile being
+            # serialized (followed=obj.owner). The first() method retrieves the
+            # first matching record or returns None if no match is found.
+
+            # owner - This refers to the field in the Follower model that
+            # represents the user who is following someone. In the line
+            # owner=user means that it's looking for instances where the owner
+            # field in the Follower model is equal to the currently logged-in
+            # user (user).
+
+            # user - This is the currently logged-in user, retrieved from the
+            # request context.
+
+            # following - This variable holds the result of the query, and in
+            # this context, it's an instance of the Follower model (if a match
+            # is found) or None (if no match is found).
+            following = Follower.objects.filter(
+                owner=user, followed=obj.owner
+            ).first()
+            # __str__ method is responsible for defining the string representation
+            # of instances of the Follower model. When you use print(following),
+            # Python calls the __str__ method to convert the object to a string.
+            print(following)
+            return following.id if following else None
+        return None
+
     class Meta:
         model = Profile
         # fields = '__all__'
         fields = [
-            'id', 'owner', 'email', 'created_at', 'updated_at', 'name',
-            'content', 'image', 'is_owner'
+            'id', 'owner', 'created_at', 'updated_at', 'email', 'name',
+            'content', 'image', 'is_owner', 'following_id',
         ]
 
 # This is a Django REST Framework (DRF) serializer class named `ProfileSerializer`.
