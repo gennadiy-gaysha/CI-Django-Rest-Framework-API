@@ -49,3 +49,19 @@ class PostsDetail(generics.RetrieveUpdateDestroyAPIView):
         comments_count=Count('comment', distinct=True),
         likes_count=Count('likes', distinct=True),
     ).order_by('-created_at')
+
+    # Authentication: When you log in to a website by providing your username
+    # and password, the system checks whether the provided credentials match a
+    # valid user in its database.
+    # Authentication is about verifying identity, ensuring that a user is who
+    # they claim to be.
+    #
+    # Authorization: Once authenticated, the system checks your user profile or
+    # role to determine what actions you are allowed to perform or what parts of
+    # the application you can access. For instance, an admin might have different
+    # permissions than a regular user.
+    # Authorization is about granting or denying access based on the authenticated
+    # user's permissions.
+    #
+    # JWTs can be used for authentication such as "ID
+    # tokens" and also for authorization such as "access tokens".

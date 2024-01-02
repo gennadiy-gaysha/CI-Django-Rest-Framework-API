@@ -16,6 +16,12 @@ def apiOverview(request):
         'ProfileDetailUpdateDelete': 'http://127.0.0.1:8000/profiles/3/',
         'PostsCreateList': 'http://127.0.0.1:8000/posts/',
         'PostsDetailUpdateDelete': 'http://127.0.0.1:8000/posts/3/',
+
+        'Registration': 'http://127.0.0.1:8000/registration/',
+        'Login': 'http://127.0.0.1:8000/login/',
+        'Logout': 'http://127.0.0.1:8000/logout/',
+        'User': 'http://127.0.0.1:8000/user/',
+        'Refresh Token': 'http://127.0.0.1:8000/token/refresh/',
     }
     return Response(api_urls)
 
@@ -31,8 +37,13 @@ class ProfileList(generics.ListAPIView):
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
-    # user profiles that  follow a user with a given profile_id
-    filterset_fields = ['owner__following__followed__profile']
+    # 1) followers id's: user profiles that  follow a user with a given
+    # profile_id
+    # 2) followed id's:  get all profiles that are followed by a profile,
+    # given its id
+    filterset_fields = ['owner__following__followed__profile',
+                        'owner__followed__owner__profile'
+                        ]
 
     ordering_fields = [
         'posts_count',
