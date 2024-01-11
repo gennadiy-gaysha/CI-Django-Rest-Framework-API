@@ -95,7 +95,7 @@ MIDDLEWARE = [
 ]
 
 # Set CLIENT_ORIGIN_DEV to the appropriate value for your local development
-CLIENT_ORIGIN_DEV = 'http://localhost:3000'
+# CLIENT_ORIGIN_DEV = 'http://localhost:3000'
 
 if 'CLIENT_ORIGIN' in os.environ:
     CORS_ALLOWED_ORIGINS = [
