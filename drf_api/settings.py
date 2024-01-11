@@ -46,9 +46,10 @@ REST_AUTH_SERIALIZERS = {
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEV')
+# DEBUG = os.environ.get('DEV')
+DEBUG = os.environ.get('DEV') in os.environ
 
-ALLOWED_HOSTS = ["127.0.0.1", os.environ.get('ALLOWED_HOSTS'), 'localhost']
+ALLOWED_HOSTS = ["127.0.0.1", os.environ.get('ALLOWED_HOSTS')]
 
 # Application definition
 
@@ -109,7 +110,7 @@ else:
 CORS_ALLOW_CREDENTIALS = True
 
 JWT_AUTH_COOKIE = 'my-app-auth'
-JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
+JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 JWT_AUTH_SAMESITE = 'None'
 
 ROOT_URLCONF = 'drf_api.urls'
@@ -146,7 +147,7 @@ else:
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
-    # print('Connected!')
+    print('Connected!')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

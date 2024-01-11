@@ -57,7 +57,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         # self.context['request'] represents the request object, and user will
         # contain the user associated with the request.
         user = self.context['request'].user
-        print(user)
+        # print(user)
         if user.is_authenticated:
             # This line queries the Follower model to check if the requesting
             # user (owner=user) is following the owner of the profile being
@@ -82,7 +82,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             # __str__ method is responsible for defining the string representation
             # of instances of the Follower model. When you use print(following),
             # Python calls the __str__ method to convert the object to a string.
-            print(following)
+            # print(following)
             return following.id if following else None
         return None
 
