@@ -24,7 +24,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 3,
-    'DATETIME_FORMAT': '%d %b %Y %H:%M:%S',
+    'DATETIME_FORMAT': '%d %b %Y',
 }
 
 if 'DEV' not in os.environ:
